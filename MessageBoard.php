@@ -11,9 +11,9 @@ if(!isset($_SESSION['CSFR_TOKEN']) || !isset($_SESSION['TOKEN_TIME'])){
 	$_SESSION['TOKEN_TIME'] = time();
 }
 require_once('config.php');
-if(isset($_POST['view']) ){
+if(isset($_POST['view'])){
 
-	preg_match('/[^0-9]+/i',$_POST[view],$ErrorFormat);
+	preg_match('/[^0-9]+/i',$_POST['view'],$ErrorFormat);
 	if(count($ErrorFormat) > 0){
 		header('Location: MessageBoard.php');
 	}else{
@@ -22,7 +22,7 @@ if(isset($_POST['view']) ){
 		try{
 			$row = mysqli_fetch_array($result);
 			if($row[0] != NULL){
-				if(strcmp($row[0],"")){
+				if(!strcmp($row[0],"")){
 					header('Location: MessageBoard.php');				
 				}
 			echo htmlentities($row[0]).'<br><br>';
@@ -71,7 +71,6 @@ try{
 		</form>';
 		}
 	echo '<form method="POST" action="MessageBoard.php">
-			<input name="csfr_token" style="display:none" value="'.$_SESSION['CSFR_TOKEN'].'">	
 			<input name="view" value="'.strval($row[4]).'" style="display:none"></input>
 			<input type="submit" value="View on other tab"></input>
 		</form>';
