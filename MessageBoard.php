@@ -28,7 +28,7 @@ if(isset($_POST['view'])){
 			echo htmlentities($row[0]).'<br><br>';
 			echo strip_tags($row[1],'<b><i><u><img><span>').'<br><br>';
 			if($row[3] != NULL)
-				echo '<iframe src="https://b10802115.centralindia.cloudapp.azure.com/messageFile/'.htmlentities($row[3]).'"></iframe><br><br>';
+				echo '<a href="download.php?fileName='.htmlentities($row[3]).'">messageFile</a><br><br>';
 			echo htmlentities($row[2]).'<br><br>';
 			if(!strcmp($row[0],$_SESSION['loginUser'])){
 				echo'						
@@ -59,7 +59,7 @@ try{
 	
 	echo strip_tags($row[1],'<b><i><u><img><span>').'<br><br>';
 	if($row[3] != NULL){
-		echo '<a href="http://b10802115.centralindia.cloudapp.azure.com/messageFile/'.htmlentities(strval($row[3])).'">MessageFile</a><br><br>';
+		echo '<a href="download.php?fileName='.htmlentities($row[3]).'">messageFile</a><br><br>';
 	}
 	echo' <span>'.$row[2].'</span><br>';
 		if(!strcmp($row[0],$_SESSION['loginUser'])){
