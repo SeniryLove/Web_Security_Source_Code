@@ -26,15 +26,19 @@ return preg_replace($find,$replace,$text);
 }
 
 function SaveMessageFile(){
-	if($_FILES['leaveFile']['size'] == 0){
-		return;
+	$saveName = $_FILES['leaveFile']['name'];
+	preg_match('/[^\w\s\[\]\-_\.{}\[\]()]+/i',$saveName,$invalidChar);
+	if(count($invalidChar) || !strcmp($saveName,"")){
+		return ;
 	}
-
-	$fileName = bin2hex(random_bytes(16)).'_'.htmlentities(strval($_FILES['leaveFile']['name']));
+	$fileName = bin2hex(random_bytes(16)).'_'.$saveName;
 	move_uploaded_file($_FILES['leaveFile']['tmp_name'],'messageFile/'.$fileName);
 	return $fileName;
 }
-
+if(strcmp($_COOKIE['csfrToken'],$_SESSION['CSFR_TOKEN'])){
+	header('Location: member.php');
+}
+else{
 
 if(!isset($_SESSION['loginUser']) || $_SESSION['loginUser'] == NULL || !isset($_POST['Message']) || $_POST['Message'] == NULL){
 	header("Location: MessageBoard.php");
@@ -78,7 +82,7 @@ else{
 
 					require_once('config.php');
 
-					#preg_match('/[^\w\s\[\]\/\:\-\=\#\?\&\.]+/i',$_POST['Message'],$InvalidChar);
+					#preg_match('/[^\w\s\[\]\-\=\#\&\.]+/i',$_POST['Message'],$InvalidChar);
 					#if(isset($InvalidChar) && $InvalidChar[0] != NULL){
 					#	$_SESSION['LeaveState'] = "Invalid Message".strval($InvalidChar[0]);
 					#}
@@ -92,11 +96,15 @@ else{
 						$times = 0;
 						$tmp = ConvertBBcode2Htmlentities(($_POST['Message']));
 						$filename = SaveMessageFile();
-						$sql_leaveMsg = $link->prepare("INSERT INTO `MsgBoard` (`Username`, `Message`,`MessageFile`) VALUES (?,?,?)");
-						$sql_leaveMsg->bind_param('sss',$_SESSION['loginUser'],$tmp,$filename);
-						$sql_leaveMsg->execute();
-						mysqli_close($link);
-						$_SESSION['LeaveState'] = "Sucessfully";
+						if($_FILES['leaveFile']['size'] && $filename == NULL){
+							$_SESSION['LeaveState'] = "Error: upload file name is wrong format or empty";
+						}else{
+							$sql_leaveMsg = $link->prepare("INSERT INTO `MsgBoard` (`Username`, `Message`,`MessageFile`) VALUES (?,?,?)");
+							$sql_leaveMsg->bind_param('sss',$_SESSION['loginUser'],$tmp,$filename);
+							$sql_leaveMsg->execute();
+							mysqli_close($link);
+							$_SESSION['LeaveState'] = "Sucessfully";
+						}
 					}
 				}
 			}
@@ -107,9 +115,9 @@ else{
 			header("Location: member.php");
 		}
 	}else{
-		session_destroy();
 		header("Location: member.php");
 	}
+}
 }
 ?>
 

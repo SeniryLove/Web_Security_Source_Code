@@ -1,6 +1,12 @@
 <?php session_start();
 
-if(!isset($_SESSION['loginUser']) || !strcmp($_SESSION['loginUser'],"")){
+
+if(strcmp($_COOKIE['csfrToken'],$_SESSION['CSFR_TOKEN'])){
+	header('Location: member.php');
+}
+
+
+else if(!isset($_SESSION['loginUser']) || !strcmp($_SESSION['loginUser'],"")){
 	header('Location: MessageBoard.php');
 }
 else{ 
@@ -61,7 +67,6 @@ else{
 			header('Location: member.php');
 		}
 	}else{		
-		session_destroy();
 		header('Location: member.php');
 	}
 }

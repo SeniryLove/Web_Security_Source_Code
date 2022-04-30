@@ -1,11 +1,17 @@
 <?php session_start();
 
-if( 	!isset($_POST['username']) ||
+
+
+if(strcmp($_COOKIE['csfrToken'],$_SESSION['CSFR_TOKEN'])){
+	header('Location: member.php');
+}
+
+else if(!isset($_POST['username']) ||
 	!isset($_POST['password']) ||
 	$_POST['username'] == "" ||
 	$_POST['password'] == "") {
 	header("Location: TitleSetting.php");
-}
+}else{
 
 $userID = $_POST['username'];
 $passWD = $_POST['password'];
@@ -49,5 +55,6 @@ if(isset($_SESSION['TOKEN_TIME']) && isset($_SESSION['CSFR_TOKEN']) && strcmp($_
 	}
 }else{
 	header("Location: TitleSetting.php");
+}
 }
 ?>

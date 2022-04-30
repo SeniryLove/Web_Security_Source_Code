@@ -1,4 +1,9 @@
 <?php session_start();
+
+if(!isset($_COOKIE['csfrToken']) && isset($_SESSION['CSFR_TOKEN'])){
+	header('Set-Cookie: csfrToken='.$_SESSION['CSFR_TOKEN'].'; SameSite=Strict; Secure; HttpOnly;');
+}
+
 if($_SESSION['logout'] == "sucessful"){
 	$_SESSION['logout'] = "";
 	echo 'Logout sucessfully!!<br/>';
@@ -11,7 +16,6 @@ if($_SESSION['register_result'] == 'true'){
 
 if($_SESSION['login_result'] == '200'){
 	if(!isset($_SESSION['CSFR_TOKEN']) || !isset($_SESSION['TOKEN_TIME'])){
-		session_destroy();
 		header('Location: member.php');
 	}else{
 		$timedif = time() - $_SESSION['TOKEN_TIME'];

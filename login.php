@@ -28,6 +28,7 @@ try{
 	  $_SESSION['login_result'] = '200';
 	  $_SESSION['loginUser'] = $userID;
 	  $_SESSION['CSFR_TOKEN'] = bin2hex(random_bytes(16)).'_'.bin2hex(random_bytes(16));
+	  header('Set-Cookie: csfrToken='.$_SESSION['CSFR_TOKEN'].'; SameSite=Strict; Secure; HttpOnly;');
 	  $_SESSION['TOKEN_TIME'] = time();
 	  $_SESSION['mugFile'] = $row[5];
   }else{

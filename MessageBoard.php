@@ -1,6 +1,16 @@
 <?php session_start();
+
+if(!isset($_COOKIE['csfrToken']) && isset($_SESSION['CSFR_TOKEN'])){
+	header('Set-Cookie: csfrToken='.$_SESSION['CSFR_TOKEN'].'; SameSite=Strict; Secure; HttpOnly;');
+	header('Location: MessageBoard.php');
+}
+
+if(strcmp($_COOKIE['csfrToken'],$_SESSION['CSFR_TOKEN'])){
+	header('Location: member.php');
+}
+
+
 if(!isset($_SESSION['CSFR_TOKEN']) || !isset($_SESSION['TOKEN_TIME'])){
-	session_destroy();
 	header('Location: member.php');
 }else{
 	$timedif = time() - $_SESSION['TOKEN_TIME'];
@@ -101,6 +111,8 @@ echo '
 	<span>Add message file on this page.</span>
 	<br><br>
 	<span>[img] tag only can convert the source by http:// or https:// and the format must be .jpg, .jpeg, .gif, png, bmp</span>
+	<br><br>
+	<span>The filename only can be letter, number, space, underline, dash, dot, brackets</span>
 	<br><br>
 	<input type="file" name="leaveFile"></input>
 	<input name="csfr_token" style="display:none" value="'.$_SESSION['CSFR_TOKEN'].'">

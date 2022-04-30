@@ -1,6 +1,15 @@
 <?php session_start();
+if(!isset($_COOKIE['csfrToken']) && isset($_SESSION['CSFR_TOKEN'])){
+	header('Set-Cookie: csfrToken='.$_SESSION['CSFR_TOKEN'].'; SameSite=Strict; Secure; HttpOnly;');
+	header('Location: member.php');
+}
+
+if(strcmp($_COOKIE['csfrToken'],$_SESSION['CSFR_TOKEN'])){
+	header('Location: member.php');
+}
+
+
 if(!isset($_SESSION['CSFR_TOKEN']) || !isset($_SESSION['TOKEN_TIME'])){
-	session_destroy();
 	header('Location: member.php');
 }else{
 	$timedif = time() - $_SESSION['TOKEN_TIME'];

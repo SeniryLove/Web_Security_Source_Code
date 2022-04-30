@@ -1,8 +1,16 @@
 <?php session_start();
-if($_SESSION['loginUser'] == "" || !isset($_SESSION['loginUser'])){
-	header("Location: member.php");
+
+
+
+if(strcmp($_COOKIE['csfrToken'],$_SESSION['CSFR_TOKEN'])){
+	header('Location: member.php');
 }
 
+
+else if($_SESSION['loginUser'] == "" || !isset($_SESSION['loginUser'])){
+	header("Location: member.php");
+}
+else{
 $idd = $_POST['csfr_token'];
 
 if(isset($_SESSION['TOKEN_TIME']) && isset($_SESSION['CSFR_TOKEN'])){
@@ -163,10 +171,9 @@ if(isset($_SESSION['TOKEN_TIME']) && isset($_SESSION['CSFR_TOKEN'])){
 		header("Location: member.php");
 	}
 }else{
-	session_destroy();
 	header("Location: member.php");
 }
-
+}
 
 
 ?>

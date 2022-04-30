@@ -2,6 +2,13 @@
 
 $idd = $_POST['csfr_token'];
 
+
+
+if(strcmp($_COOKIE['csfrToken'],$_SESSION['CSFR_TOKEN'])){
+	header("Location: member.php");
+}
+else
+{
 if(isset($_SESSION['TOKEN_TIME']) && isset($_SESSION['CSFR_TOKEN'])){
 	$timedif = time() - $_SESSION['TOKEN_TIME'];
 
@@ -16,8 +23,8 @@ if(isset($_SESSION['TOKEN_TIME']) && isset($_SESSION['CSFR_TOKEN'])){
 		header("Location: member.php");
 	}
 }else{
-	session_destroy();
 	header("Location: member.php");
 }
 header("Location: member.php");
+}
 ?>
